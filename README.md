@@ -8,40 +8,41 @@ I've tried a bunch of different libraries for preloading test data into database
 That's why I'm making this library. Pull JSON or YAML from the file system or use a raw object. Use one function to reset the database. And there's a way to map key strings to mongo-generated IDs so you don't need to worry about that part. 
 
 ## API
-    ```javascript
-    var faker = require('mmfga');
 
-    var fixtures = {
-        collection1: [
-            {
-                _id: '__record1__', //will get replaced with a mongo ID, and that ID will get mapped to 'record1'
-                field1: 'value'
-            },
-            {
-                field1: 'value'
-                friend: '__record1__' //will get replaced with mongo ID for record1
-            },
-            {
-                field1: 'otherValue',
-                field2: '___record1___' //will get replaced with hex representation of mongo ID for record1
-            }
-        ],
-        collection2: 
-    }
+```javascript
+var faker = require('mmfga');
 
-    // connect to db
-    faker.connect('<connection string>', fixtures, function(err, conn){
-        //conn is a mmfga connection.
-        //fixtures can be either a raw object or a string containing a path to either a json or yaml file.
-        //you can access underlying stuff via conn.connection
+var fixtures = {
+    collection1: [
+        {
+            _id: '__record1__', //will get replaced with a mongo ID, and that ID will get mapped to 'record1'
+            field1: 'value'
+        },
+        {
+            field1: 'value'
+            friend: '__record1__' //will get replaced with mongo ID for record1
+        },
+        {
+            field1: 'otherValue',
+            field2: '___record1___' //will get replaced with hex representation of mongo ID for record1
+        }
+    ],
+    collection2: 
+}
 
-        conn.reset(); //reset the db state to what's in fixtures
-        conn.close(); //close the connection and clean everything up
-        conn.reset(function(err){
-            //if an error occurs we can catch it here. if we don't send a callback, the error will just get thrown
-        });
+// connect to db
+faker.connect('<connection string>', fixtures, function(err, conn){
+    //conn is a mmfga connection.
+    //fixtures can be either a raw object or a string containing a path to either a json or yaml file.
+    //you can access underlying stuff via conn.connection
+
+    conn.reset(); //reset the db state to what's in fixtures
+    conn.close(); //close the connection and clean everything up
+    conn.reset(function(err){
+        //if an error occurs we can catch it here. if we don't send a callback, the error will just get thrown
     });
-    ```
+});
+```
 
 ## Is That It?
 Yeah, that's it. Runs on node > 4. Probably runs on older nodes but that seems like a lot of work to deal with. 

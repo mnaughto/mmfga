@@ -8,7 +8,7 @@ I've tried a bunch of different libraries for preloading test data into database
 That's why I'm making this library. Pull JSON or YAML from the file system or use a raw object. Use one function to reset the database. And there's a way to map key strings to mongo-generated IDs so you don't need to worry about that part. 
 
 ## API
-    ```JavaScript
+    ```javascript
     var faker = require('mmfga');
 
     var fixtures = {

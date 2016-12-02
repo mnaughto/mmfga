@@ -8,8 +8,14 @@ var fs = require('fs');
 var forEach = require('lodash.foreach');
 var async = require('async');
 
-function Connector(connectionString){
+function Connector(connectionString, initialMapping){
     var _mapping = {};
+
+    if(initialMapping){
+        forEach(initialMapping, function(id, key){
+            _mapping[key] = ObjectID.createFromHexString(id);
+        });
+    }
 
     this.connectionString = connectionString;
 
@@ -169,10 +175,14 @@ function isString(value){
     return Object.prototype.toString.call(value) == '[object String]';
 }
 
-exports.connect = function(connectionString, fixtures, cb){
-    var finalFixtures;
+exports.connect = function(connectionString, initialMapping, fixtures, cb){
+    if(!cb){
+        cb = fixtures;
+        fixtures = initialMapping;
+        initialMapping = null;
+    }
 
-    var connector = new Connector(connectionString);    
+    var connector = new Connector(connectionString, initialMapping);    
 
     connector.parse(fixtures, function(err){
         if(err){return cb(err);}

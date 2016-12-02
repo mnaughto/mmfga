@@ -37,6 +37,8 @@ faker.connect('<connection string>', fixtures, function(err, conn){
     //fixtures can be either a raw object or a string containing a path to either a json or yaml file. It can also be a path to a directory containing a mixture of yaml and json files. In that case, each file is interpreted as a collection and named after the file name. You can also pass null if you want to handle fixtures on a test-by-test basis.
     //you can access underlying stuff via conn.db.
 
+    //we can also add an argument before fixtures, a mapping from string to string, to provide specific IDs for keys in the fixtures. For instance we could have passed {"record1":"somehexstring"}.
+
     //reset the db state to what's in fixtures    
     conn.reset(function(err){
         //if an error occurs we can catch it here. 

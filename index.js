@@ -6,6 +6,7 @@ var YAML = require('yamljs');
 var path = require('path');
 var fs = require('fs');
 var forEach = require('lodash.foreach');
+var async = require('async');
 
 function Connector(connectionString){
     var _mapping = {};
@@ -33,6 +34,8 @@ Connector.prototype = {
     },
 
     reset: function(fixtures, cb){
+        var self = this;
+
         if(!cb){
             cb = fixtures;
             fixtures = null;
@@ -40,7 +43,13 @@ Connector.prototype = {
 
         fixtures = fixtures || this.fixtures;
 
-        this.mfix.fixture(fixtures, cb);
+        async.eachOf(fixtures, function(records, collection, cb){
+            self.db.dropCollection(collection, cb);
+        }, function(err){
+            if(err){return cb(err);}
+
+            self.mfix.fixture(fixtures, cb);
+        });
     },
 
     close: function(cb){

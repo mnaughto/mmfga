@@ -31,16 +31,27 @@ var fixtures = {
 }
 
 // connect to db
+// calls conn.open under the hood
 faker.connect('<connection string>', fixtures, function(err, conn){
     //conn is a mmfga connection.
-    //fixtures can be either a raw object or a string containing a path to either a json or yaml file.
-    //you can access underlying stuff via conn.connection
+    //fixtures can be either a raw object or a string containing a path to either a json or yaml file. It can also be a path to a directory containing a mixture of yaml and json files. In that case, each file is interpreted as a collection and named after the file name. You can also pass null if you want to handle fixtures on a test-by-test basis.
+    //you can access underlying stuff via conn.db.
 
-    conn.reset(); //reset the db state to what's in fixtures
-    conn.close(); //close the connection and clean everything up
+    //reset the db state to what's in fixtures    
     conn.reset(function(err){
-        //if an error occurs we can catch it here. if we don't send a callback, the error will just get thrown
+        //if an error occurs we can catch it here. 
     });
+
+    //pass fixtures specific to the current test
+    conn.reset(fixtures, function(err){
+        //if an error occurs we can catch it here.
+    });
+
+    //close the connection and clean everything up
+    conn.close(function(err){
+        //maybe we can just exit here without dealing with the error?
+    }); 
+
 });
 ```
 

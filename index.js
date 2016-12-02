@@ -28,10 +28,7 @@ Connector.prototype = {
 
             self.db = db;
             self.mfix = mongodbFixture(db);
-            self.mfix.setup(function(err){
-                if(err){return cb(err);}
-                self.reset(cb);
-            });
+            self.reset(cb);
         });
     },
 
@@ -41,7 +38,7 @@ Connector.prototype = {
             fixtures = null;
         }
 
-        fixtures = fixtures || self.fixtures;
+        fixtures = fixtures || this.fixtures;
 
         this.mfix.fixture(fixtures, cb);
     },
@@ -113,6 +110,7 @@ Connector.prototype = {
 
     import: function(fixtures){
         var results = {};
+        var self = this;
         fixtures = fixtures || {};
 
         forEach(fixtures, function(collection, collectionName){
@@ -125,10 +123,10 @@ Connector.prototype = {
                         var stringMatches = fieldValue.match(/^___(.*)___$/i);
 
                         if(stringMatches){
-                            oid = getObjectId(this, stringMatches[1]);
+                            oid = getObjectId(self, stringMatches[1]);
                             outRecord[fieldName] = oid.toHexString();
                         } else if(idMatches) {
-                            oid = getObjectId(this, idMatches[1]);
+                            oid = getObjectId(self, idMatches[1]);
                             outRecord[fieldName] = oid;
                         } else {
                             outRecord[fieldName] = fieldValue;
@@ -159,7 +157,7 @@ function getObjectId(connector, value){
 }
 
 function isString(value){
-    return Object.prototype.call(value) == '[object String]';
+    return Object.prototype.toString.call(value) == '[object String]';
 }
 
 exports.connect = function(connectionString, fixtures, cb){

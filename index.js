@@ -35,7 +35,11 @@ Connector.prototype = {
 
             self.db = db;
             self.mfix = mongodbFixture(db);
-            self.reset(cb);
+            self.db.dropDatabase(function(err){
+                if(err){return cb(err);}
+
+                self.reset(cb);
+            });
         });
     },
 
@@ -50,8 +54,14 @@ Connector.prototype = {
         fixtures = fixtures || this.fixtures;
 
         async.eachOf(fixtures, function(records, collection, cb){
-            self.db.dropCollection(collection, cb);
-        }, function(err){
+            self.db.dropCollection(collection, function(err){
+                if(err && err.message != 'ns not found'){
+                    cb(err);
+                } else {
+                    cb();
+                }
+            });
+        }, function(err){ 
             if(err){return cb(err);}
 
             self.mfix.fixture(fixtures, cb);
@@ -164,7 +174,7 @@ function getObjectId(connector, value){
     var result = connector.idMap[value];
 
     if(!result){
-        result = ObjectID.createFromTime(Date.now() / 1000);
+        result = new ObjectID();
         connector.idMap[value] = result;
     }
 

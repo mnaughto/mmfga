@@ -1,6 +1,6 @@
 {
   "name": "mmfga",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "Make MongoDB Fixtures Great Again",
   "main": "index.js",
   "scripts": {

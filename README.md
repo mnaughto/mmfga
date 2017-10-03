@@ -4,6 +4,8 @@ Make MongoDB Fixtures Great Again
 ## Purpose
 I've tried a bunch of different libraries for preloading test data into databases. Some of them are like [barrels](https://www.npmjs.com/package/barrels) and require sails in order to work. There are also several on npm that just don't seem to do the trick. And then there's [mongofixtures for Go](https://github.com/OwlyCode/mongofixtures) which has this cool concept of mapping key strings to generated mongo IDs. Some of them read from files. Others read from an object you pass in. Why are there so many of them? 
 
+<img src="https://imgs.xkcd.com/comics/standards.png">
+
 ## One MongoDB Fixture Library to Rule Them All
 That's why I'm making this library. Pull JSON or YAML from the file system or use a raw object. Use one function to reset the database. And there's a way to map key strings to mongo-generated IDs so you don't need to worry about that part. 
 
